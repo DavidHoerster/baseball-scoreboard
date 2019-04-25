@@ -30,6 +30,7 @@ namespace gbac_baseball.web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddApplicationInsightsTelemetry();
             services.AddSignalR()
                     .AddAzureSignalR();
             services.AddHostedService<BaseballOrchestrator>();

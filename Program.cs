@@ -28,6 +28,7 @@ namespace gbac_baseball.web
                         options.Connect(settings["ConnectionStrings:AppConfig"]);
                     });
                 })
+                .UseApplicationInsights()
                 .UseStartup<Startup>();
     }
 }
