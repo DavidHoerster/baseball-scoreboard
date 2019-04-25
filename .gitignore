@@ -1,0 +1,8 @@
+bin/
+obj/
+.vs/
+.vscode/
+packages/
+**.csproj.user
+node_modules/
+*.Development.json
