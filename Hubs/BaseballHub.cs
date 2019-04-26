@@ -21,6 +21,11 @@ namespace gbac_baseball.web.Hubs
             await Clients.Caller.Echo($"You are now following {team}");
         }
 
+        public async Task FinalScore(string msg)
+        {
+            await Clients.All.FinalScore(msg);
+        }
+
         public async Task UnfollowTeam(string team)
         {
             var client = new TelemetryClient();

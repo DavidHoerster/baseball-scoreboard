@@ -9,5 +9,6 @@ namespace gbac_baseball.web.Hubs
         Task Broadcast(string msg);
         Task Echo(string message);
         Task SendEvent(string team, GameEvent evt);
+        Task FinalScore(string msg);
     }
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hello Bulma!</title>
+    <title>Baseball Scoreboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script type="text/javascript">
@@ -36,7 +36,9 @@
                 </div>
             </div>
             <div class="level-right">
-                <div class="level-item" id="notification-area">
+                <div class="level-item control" id="notification-area">
+                    <textarea id="scores-area" class="textarea is-info" placeholder="Final Scores" cols="100"
+                        rows="10"></textarea>
                 </div>
             </div>
         </div>
@@ -98,6 +100,11 @@
             function bindConnectionMessage(connection) {
                 var addNotification = function (msg) {
                     console.log(msg);
+                };
+
+                var updateFinalScore = function (msg) {
+                    var scoreTextArea = document.getElementById('scores-area');
+                    scoreTextArea.value += msg + "\n";
                 };
 
                 var updateGameBoxScore = function (team, evt) {
@@ -182,6 +189,7 @@
                 connection.on('broadcast', addNotification);
                 connection.on('echo', addNotification);
                 connection.on('sendEvent', updateGameBoxScore);
+                connection.on('finalScore', updateFinalScore);
 
                 connection.onclose(onConnectionError);
             }

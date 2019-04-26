@@ -69,6 +69,11 @@ namespace gbac_baseball.web.Events
 
                     await _hub.Clients.Group(updatedGameEvent.HomeTeam).SendEvent(updatedGameEvent.HomeTeam, updatedGameEvent);
 
+                    if (updatedGameEvent.IsEndOfGame == "T")
+                    {
+                        await _hub.Clients.All.FinalScore($"FINAL - {updatedGameEvent.HomeTeam} {updatedGameEvent.HomeScore}  --  {updatedGameEvent.VisitingTeam} {updatedGameEvent.VisitorScore}");
+                    }
+
                     Console.WriteLine($"Message received. Game {updatedGameEvent.GameId} with score of {updatedGameEvent.HomeTeam} {updatedGameEvent.HomeScore} to {updatedGameEvent.VisitingTeam} {updatedGameEvent.VisitorScore}");
                 }
             }
