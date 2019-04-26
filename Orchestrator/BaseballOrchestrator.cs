@@ -19,6 +19,7 @@ namespace gbac_baseball.web.Orchestrator
 
         private readonly EventProcessorHost _eventProcessor;
         private readonly IHubContext<BaseballHub, IBaseball> _hub;
+        private readonly IConfiguration _config;
         public BaseballOrchestrator(IConfiguration config, IHubContext<BaseballHub, IBaseball> hub)
         {
             _eventProcessor = new EventProcessorHost(
@@ -29,10 +30,11 @@ namespace gbac_baseball.web.Orchestrator
                                         config["event-storage-account-container"]);
 
             _hub = hub;
+            _config = config;
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _eventProcessor.RegisterEventProcessorFactoryAsync(new BaseballEventProcessorFactory(_hub));
+            await _eventProcessor.RegisterEventProcessorFactoryAsync(new BaseballEventProcessorFactory(_hub, _config));
             while (!stoppingToken.IsCancellationRequested)
             {
                 await Task.Delay(500);
