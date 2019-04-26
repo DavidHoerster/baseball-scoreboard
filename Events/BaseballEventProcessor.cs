@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
 using MySql.Data.MySqlClient;
 using System.Data;
+using Microsoft.ApplicationInsights;
 
 namespace gbac_baseball.web.Events
 {
@@ -24,10 +25,12 @@ namespace gbac_baseball.web.Events
         private readonly IConfiguration _config;
         private readonly Lazy<ConnectionMultiplexer> _redisConnection;
         private IDatabase _cache;
+        private TelemetryClient _client;
         public BaseballEventProcessor(IHubContext<BaseballHub, IBaseball> hub, IConfiguration config)
         {
             _hub = hub;
             _config = config;
+            _client = new TelemetryClient();
 
             _redisConnection = new Lazy<ConnectionMultiplexer>(() =>
                 ConnectionMultiplexer.Connect(_config["Azure:Redis:CacheConnection"])
@@ -75,9 +78,15 @@ namespace gbac_baseball.web.Events
 
         private async Task<GameEvent> GetPlayerNames(GameEvent evt, IDbConnection conn)
         {
+            var startTime = DateTimeOffset.UtcNow;
+
+            _client.TrackEvent("Redis Cache Lookup");
+
             var pitcherName = await _cache.StringGetAsync(evt.Pitcher);
             if (pitcherName.IsNullOrEmpty)
             {
+                _client.TrackEvent("Redis Cache Miss");
+
                 //query the db
                 var name = await conn.QuerySingleOrDefaultAsync("SELECT nameFirst, nameLast FROM people WHERE retroID=@playerId", new { playerId = evt.Pitcher });
                 if (name != null)
@@ -85,11 +94,22 @@ namespace gbac_baseball.web.Events
                     pitcherName = $"{name.nameFirst} {name.nameLast}";
                     await _cache.StringSetAsync(evt.Pitcher, pitcherName);
                 }
+                _client.TrackDependency("Redis Cache",
+                                        "Cache Set",
+                                        evt.Pitcher,
+                                        startTime,
+                                        new TimeSpan(DateTimeOffset.UtcNow.Ticks - startTime.Ticks),
+                                        true);
             }
+
+            startTime = DateTimeOffset.UtcNow;
+            _client.TrackEvent("Redis Cache Lookup");
 
             var batterName = await _cache.StringGetAsync(evt.Batter);
             if (batterName.IsNullOrEmpty)
             {
+                _client.TrackEvent("Redis Cache Miss");
+
                 //query the db
                 var name = await conn.QuerySingleOrDefaultAsync("SELECT nameFirst, nameLast FROM people WHERE retroID=@playerId", new { playerId = evt.Batter });
                 if (name != null)
@@ -97,6 +117,12 @@ namespace gbac_baseball.web.Events
                     batterName = $"{name.nameFirst} {name.nameLast}";
                     await _cache.StringSetAsync(evt.Batter, batterName);
                 }
+                _client.TrackDependency("Redis Cache",
+                                        "Cache Set",
+                                        evt.Batter,
+                                        startTime,
+                                        new TimeSpan(DateTimeOffset.UtcNow.Ticks - startTime.Ticks),
+                                        true);
             }
 
             evt.Batter = batterName;

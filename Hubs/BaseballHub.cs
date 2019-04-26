@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using gbac_baseball.web.Model;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.SignalR;
 
 namespace gbac_baseball.web.Hubs
@@ -12,12 +13,20 @@ namespace gbac_baseball.web.Hubs
 
         public async Task FollowTeam(string team)
         {
+            var client = new TelemetryClient();
+
+            client.TrackEvent($"Follow {team} Event");
+
             await Groups.AddToGroupAsync(Context.ConnectionId, team);
             await Clients.Caller.Echo($"You are now following {team}");
         }
 
         public async Task UnfollowTeam(string team)
         {
+            var client = new TelemetryClient();
+
+            client.TrackEvent($"Un-follow {team} Event");
+
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, team);
             await Clients.Caller.Echo($"You are now not following {team}");
         }
