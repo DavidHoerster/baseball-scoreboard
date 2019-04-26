@@ -28,38 +28,7 @@
             <div class="level-left">
                 <div class="level-item">
                     <div class="select is-large is-primary">
-                        <select id="teamList">
-                            <option value="ANA">Anaheim Angels</option>
-                            <option value="BAL">Baltimore Orioles</option>
-                            <option value="BOS">Boston Red Sox</option>
-                            <option value="CHA">Chicago White Sox</option>
-                            <option value="CLE">Cleveland Indians</option>
-                            <option value="DET">Detroit Tigers</option>
-                            <option value="HOU">Houston Astros</option>
-                            <option value="KCA">Kansas City Royals</option>
-                            <option value="MIN">Minnesota Twins</option>
-                            <option value="NYA">New York Yankees</option>
-                            <option value="OAK">Oakland Athletics</option>
-                            <option value="SEA">Seattle Mariners</option>
-                            <option value="TBA">Tampa Bay Rays</option>
-                            <option value="TEX">Texas Rangers</option>
-                            <option value="TOR">Toronto Blue Jays</option>
-                            <option value="ARI">Arizona Diamondbacks</option>
-                            <option value="ATL">Atlanta Braves</option>
-                            <option value="CHN">Chicago Cubs</option>
-                            <option value="CIN">Cincinnati Reds</option>
-                            <option value="COL">Colorado Rockies</option>
-                            <option value="LAN">Los Angeles Dodgers</option>
-                            <option value="MIA">Miami Marlins</option>
-                            <option value="MIL">Milwaukee Brewers</option>
-                            <option value="NYN">New York Mets</option>
-                            <option value="PHI">Philadelphia Phillies</option>
-                            <option value="PIT">Pittsburgh Pirates</option>
-                            <option value="SDN">San Diego Padres</option>
-                            <option value="SFN">San Francisco Giants</option>
-                            <option value="SLN">St. Louis Cardinals</option>
-                            <option value="WAS">Washington Nationals</option>
-                        </select>
+                        <select id="teamList"></select>
                     </div>
                 </div>
                 <div class="level-item">
@@ -81,18 +50,6 @@
             </div>
         </div>
         <div id='teamColumns' class="columns">
-            <!-- <div id="col-PIT" class="column">
-                <h2 class="subtitle">Pirates</h2>
-                <div id="game-123">
-                    <p id="game-123-header"><strong>03/31/2018 PIT vs ARI</strong></p>
-                    <p id="game-123-home">PIT - 3</p>
-                    <p id="game-123-visitor">ARI - 5</p>
-                    <p id="game-123-update">blah blah blah</p>
-                </div>
-            </div>
-            <div id="col-PHI" class="column">
-                <h2 class="subtitle">Phillies</h2>
-            </div> -->
         </div>
     </section>
 
@@ -110,6 +67,28 @@
                 });
             });
 
+            function get(url) {
+                return new Promise((resolve, reject) => {
+                    const req = new XMLHttpRequest();
+                    req.open('GET', url);
+                    req.onload = () => req.status === 200 ? resolve(req.response) : reject(Error(req.statusText));
+                    req.onerror = (e) => reject(Error(`Network Error: ${e}`));
+                    req.send();
+                });
+            };
+
+            var teams = get('/api/team')
+                .then((data) => {
+                    var teamSelect = document.getElementById('teamList');
+                    var teamData = JSON.parse(data);
+                    teamData.forEach(team => {
+                        var teamOpt = document.createElement('option');
+                        teamOpt.setAttribute('value', team.teamId);
+                        teamOpt.innerText = team.name;
+                        teamSelect.appendChild(teamOpt);
+                    });
+                })
+                .catch();
 
             var connection = new signalR.HubConnectionBuilder()
                 .withUrl('/baseball')
@@ -119,18 +98,6 @@
             function bindConnectionMessage(connection) {
                 var addNotification = function (msg) {
                     console.log(msg);
-                    // var notiarea = document.getElementById('notification-area');
-                    // var newNote = document.createElement('div');
-                    // newNote.classList.add('notification');
-                    // newNote.classList.add('is-info');
-
-                    // var delBtn = document.createElement('button');
-                    // delBtn.classList.add('delete');
-
-                    // var notitext = document.createTextNode(msg);
-                    // newNote.appendChild(delBtn);
-                    // newNote.appendChild(notitext);
-                    // notiarea.appendChild(newNote);
                 };
 
                 var updateGameBoxScore = function (team, evt) {
@@ -211,69 +178,6 @@
                         gameBody.innerHTML += "<tr><td colspan='4'><strong>FINAL</strong></td></tr>";
                     }
                 };
-
-                // var addEventUpdate = function (team, evt) {
-                //     console.log('message received for ' + team);
-
-                //     var col = document.getElementById('col-' + team);
-                //     var game = document.getElementById('game-' + evt.gameId);
-                //     var header, homescore, visitorScore, eventText;
-
-                //     var atbatIndicator = document.createElement('i');
-                //     atbatIndicator.classList.add('fas');
-                //     atbatIndicator.classList.add('fa-angle-right');
-
-                //     var isHomeAtBat = evt.isHomeTeamAtBat == 1;
-                //     if (game) {
-                //         //use existing div for game                        
-                //         homescore = document.getElementById('game-' + evt.gameId + '-home');
-                //         while (homescore.firstChild) {
-                //             homescore.removeChild(homescore.firstChild);
-                //         }
-                //         visitorScore = document.getElementById('game-' + evt.gameId + '-visitor');
-                //         while (visitorScore.firstChild) {
-                //             visitorScore.removeChild(visitorScore.firstChild);
-                //         }
-                //         eventText = document.getElementById('game-' + evt.gameId + '-update');
-                //         while (eventText.firstChild) {
-                //             eventText.removeChild(eventText.firstChild);
-                //         }
-                //     } else {
-                //         //create new div for game
-                //         game = document.createElement('div');
-                //         game.setAttribute('id', 'game-' + evt.gameId);
-
-                //         header = document.createElement('p');
-                //         header.setAttribute('id', 'game-' + evt.gameId + '-header');
-                //         var strongHeader = document.createElement('strong');
-                //         strongHeader.innerText = evt.date + ' ' + evt.homeTeam + ' vs ' + evt.visitingTeam;
-                //         header.appendChild(strongHeader);
-                //         game.appendChild(header);
-
-                //         homescore = document.createElement('p');
-                //         homescore.setAttribute('id', 'game-' + evt.gameId + '-home');
-                //         game.appendChild(homescore);
-
-                //         visitorScore = document.createElement('p');
-                //         visitorScore.setAttribute('id', 'game-' + evt.gameId + '-visitor');
-                //         game.appendChild(visitorScore);
-
-                //         eventText = document.createElement('p');
-                //         eventText.setAttribute('id', 'game-' + evt.gameId + '-update');
-                //         game.appendChild(eventText);
-
-                //         col.appendChild(game);
-                //     }
-                //     if (isHomeAtBat) {
-                //         homescore.appendChild(atbatIndicator);
-                //     } else {
-                //         visitorScore.appendChild(atbatIndicator);
-                //     }
-                //     homescore.append(evt.homeTeam + ' - ' + evt.homeScore);
-                //     visitorScore.append(evt.visitingTeam + ' - ' + evt.visitorScore);
-                //     eventText.append(evt.eventText);
-
-                // };
 
                 connection.on('broadcast', addNotification);
                 connection.on('echo', addNotification);
