@@ -1,250 +1,338 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Baseball Scoreboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css"
+    />
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
+    ></script>
     <script type="text/javascript">
-        var appInsights = window.appInsights || function (a) {
-            function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement("script"); b.src = a.url || "https://az416426.vo.msecnd.net/scripts/a/ai.0.js", d.getElementsByTagName("script")[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ["Event", "Exception", "Metric", "PageView", "Trace", "Dependency"]; f.length;)b("track" + f.pop()); if (b("setAuthenticatedUserContext"), b("clearAuthenticatedUserContext"), b("startTrackEvent"), b("stopTrackEvent"), b("startTrackPage"), b("stopTrackPage"), b("flush"), !a.disableExceptionTracking) { f = "onerror", b("_" + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c["_" + f](a, b, d, e, h), i } } return c
-        }({
-            instrumentationKey: "bf6335cf-cdf8-48b0-8aa2-82d4a6a3ed8f"
+      var appInsights =
+        window.appInsights ||
+        (function(a) {
+          function b(a) {
+            c[a] = function() {
+              var b = arguments;
+              c.queue.push(function() {
+                c[a].apply(c, b);
+              });
+            };
+          }
+          var c = { config: a },
+            d = document,
+            e = window;
+          setTimeout(function() {
+            var b = d.createElement("script");
+            (b.src =
+              a.url || "https://az416426.vo.msecnd.net/scripts/a/ai.0.js"),
+              d.getElementsByTagName("script")[0].parentNode.appendChild(b);
+          });
+          try {
+            c.cookie = d.cookie;
+          } catch (a) {}
+          c.queue = [];
+          for (
+            var f = [
+              "Event",
+              "Exception",
+              "Metric",
+              "PageView",
+              "Trace",
+              "Dependency"
+            ];
+            f.length;
+
+          )
+            b("track" + f.pop());
+          if (
+            (b("setAuthenticatedUserContext"),
+            b("clearAuthenticatedUserContext"),
+            b("startTrackEvent"),
+            b("stopTrackEvent"),
+            b("startTrackPage"),
+            b("stopTrackPage"),
+            b("flush"),
+            !a.disableExceptionTracking)
+          ) {
+            (f = "onerror"), b("_" + f);
+            var g = e[f];
+            e[f] = function(a, b, d, e, h) {
+              var i = g && g(a, b, d, e, h);
+              return !0 !== i && c["_" + f](a, b, d, e, h), i;
+            };
+          }
+          return c;
+        })({
+          instrumentationKey: "bf6335cf-cdf8-48b0-8aa2-82d4a6a3ed8f"
         });
 
-        window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length && appInsights.trackPageView();
+      (window.appInsights = appInsights),
+        appInsights.queue &&
+          0 === appInsights.queue.length &&
+          appInsights.trackPageView();
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
     <section class="section">
-        <div class="container">
-            <h1 class="title">
-                Baseball Scoreboard
-            </h1>
-            <p class="subtitle">Select a Team to Follow...</p>
-            <div class="level-left">
-                <div class="level-item">
-                    <div class="select is-large is-primary">
-                        <select id="teamList"></select>
-                    </div>
-                </div>
-                <div class="level-item">
-                    <button id="followBtn" class="button is-primary is-large">Follow</button>
-                </div>
+      <div class="container">
+        <h1 class="title">
+          Baseball Scoreboard [PROD]
+        </h1>
+        <p class="subtitle">Select a Team to Follow...</p>
+        <div class="level-left">
+          <div class="level-item">
+            <div class="select is-large is-primary">
+              <select id="teamList"></select>
             </div>
-            <div class="level-right">
-                <div class="level-item control" id="notification-area">
-                    <textarea id="scores-area" class="textarea is-info" placeholder="Final Scores" cols="100"
-                        rows="10"></textarea>
-                </div>
-            </div>
+          </div>
+          <div class="level-item">
+            <button id="followBtn" class="button is-primary is-large">
+              Follow
+            </button>
+          </div>
         </div>
+        <div class="level-right">
+          <div class="level-item control" id="notification-area">
+            <textarea
+              id="scores-area"
+              class="textarea is-info"
+              placeholder="Final Scores"
+              cols="100"
+              rows="10"
+            ></textarea>
+          </div>
+        </div>
+      </div>
     </section>
     <section class="hero is-success">
-        <div class="hero-body">
-            <div class="container">
-                <h1 class="title">
-                    Team Scores
-                </h1>
-            </div>
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Team Scores
+          </h1>
         </div>
-        <div id='teamColumns' class="columns">
-        </div>
+      </div>
+      <div id="teamColumns" class="columns"></div>
     </section>
 
-
-    <script type="text/javascript"
-        src="https://cdn.jsdelivr.net/npm/@aspnet/signalr@1.1.0/dist/browser/signalr.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@aspnet/signalr@1.1.0/dist/browser/signalr.min.js"
+    ></script>
 
     <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function () {
-
-            (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
-                $notification = $delete.parentNode;
-                $delete.addEventListener('click', () => {
-                    $notification.parentNode.removeChild($notification);
-                });
+      document.addEventListener("DOMContentLoaded", function() {
+        (document.querySelectorAll(".notification .delete") || []).forEach(
+          $delete => {
+            $notification = $delete.parentNode;
+            $delete.addEventListener("click", () => {
+              $notification.parentNode.removeChild($notification);
             });
+          }
+        );
 
-            function get(url) {
-                return new Promise((resolve, reject) => {
-                    const req = new XMLHttpRequest();
-                    req.open('GET', url);
-                    req.onload = () => req.status === 200 ? resolve(req.response) : reject(Error(req.statusText));
-                    req.onerror = (e) => reject(Error(`Network Error: ${e}`));
-                    req.send();
-                });
-            };
+        function get(url) {
+          return new Promise((resolve, reject) => {
+            const req = new XMLHttpRequest();
+            req.open("GET", url);
+            req.onload = () =>
+              req.status === 200
+                ? resolve(req.response)
+                : reject(Error(req.statusText));
+            req.onerror = e => reject(Error(`Network Error: ${e}`));
+            req.send();
+          });
+        }
 
-            var teams = get('/api/team')
-                .then((data) => {
-                    var teamSelect = document.getElementById('teamList');
-                    var teamData = JSON.parse(data);
-                    teamData.forEach(team => {
-                        var teamOpt = document.createElement('option');
-                        teamOpt.setAttribute('value', team.teamId);
-                        teamOpt.innerText = team.name;
-                        teamSelect.appendChild(teamOpt);
-                    });
-                })
-                .catch();
+        var teams = get("/api/team")
+          .then(data => {
+            var teamSelect = document.getElementById("teamList");
+            var teamData = JSON.parse(data);
+            teamData.forEach(team => {
+              var teamOpt = document.createElement("option");
+              teamOpt.setAttribute("value", team.teamId);
+              teamOpt.innerText = team.name;
+              teamSelect.appendChild(teamOpt);
+            });
+          })
+          .catch();
 
-            var connection = new signalR.HubConnectionBuilder()
-                .withUrl('/baseball')
-                .build();
+        var connection = new signalR.HubConnectionBuilder()
+          .withUrl("/baseball")
+          .build();
 
+        function bindConnectionMessage(connection) {
+          var addNotification = function(msg) {
+            console.log(msg);
+          };
 
-            function bindConnectionMessage(connection) {
-                var addNotification = function (msg) {
-                    console.log(msg);
-                };
+          var updateFinalScore = function(msg) {
+            var scoreTextArea = document.getElementById("scores-area");
+            scoreTextArea.value += msg + "\n";
+          };
 
-                var updateFinalScore = function (msg) {
-                    var scoreTextArea = document.getElementById('scores-area');
-                    scoreTextArea.value += msg + "\n";
-                };
+          var updateGameBoxScore = function(team, evt) {
+            console.log("message received for " + team);
+            var col = document.getElementById("col-" + team);
+            var game = document.getElementById("game-" + evt.gameId);
 
-                var updateGameBoxScore = function (team, evt) {
-                    console.log('message received for ' + team);
-                    var col = document.getElementById('col-' + team);
-                    var game = document.getElementById('game-' + evt.gameId);
+            var gameBody;
 
-                    var gameBody;
+            var isHomeAtBat = evt.isHomeTeamAtBat == 1;
 
-                    var isHomeAtBat = evt.isHomeTeamAtBat == 1;
+            if (game) {
+              //box score found...let's grab handles
+              gameBody = document.getElementById(
+                "game-" + evt.gameId + "-body"
+              );
+              while (gameBody.firstChild) {
+                gameBody.removeChild(gameBody.firstChild);
+              }
+            } else {
+              //need to create box score
+              var title = document.createElement("h3");
+              title.innerHTML = "<strong>" + evt.date + "</strong>";
 
-                    if (game) {
-                        //box score found...let's grab handles
-                        gameBody = document.getElementById('game-' + evt.gameId + '-body');
-                        while (gameBody.firstChild) {
-                            gameBody.removeChild(gameBody.firstChild);
-                        }
-                    } else {
-                        //need to create box score
-                        var title = document.createElement('h3');
-                        title.innerHTML = "<strong>" + evt.date + "</strong>";
+              game = document.createElement("table");
+              game.classList.add("table");
+              game.classList.add("is-fullwidth");
+              game.setAttribute("id", "game-" + evt.gameId);
 
-                        game = document.createElement('table');
-                        game.classList.add('table');
-                        game.classList.add('is-fullwidth');
-                        game.setAttribute('id', 'game-' + evt.gameId);
+              game.innerHTML =
+                '<thead><tr><th></th><th>Team</th><th>Inning</th><th><abbr title="Runs">R</abbr></th><th>Balls</th><th>Strikes</th><th>Outs</th><th>Pitcher</th><th>At Bat</th><th>Event</th></tr></thead>';
+              gameBody = document.createElement("tbody");
+              gameBody.setAttribute("id", "game-" + evt.gameId + "-body");
+              game.appendChild(gameBody);
 
-                        game.innerHTML = '<thead><tr><th></th><th>Team</th><th>Inning</th><th><abbr title="Runs">R</abbr></th><th>Balls</th><th>Strikes</th><th>Outs</th><th>Pitcher</th><th>At Bat</th><th>Event</th></tr></thead>';
-                        gameBody = document.createElement('tbody');
-                        gameBody.setAttribute('id', 'game-' + evt.gameId + '-body');
-                        game.appendChild(gameBody);
+              gameBody.innerHTML =
+                "<tr><td colspan='5'><strong>" +
+                evt.date +
+                "</strong></td></tr>";
 
-                        gameBody.innerHTML = "<tr><td colspan='5'><strong>" + evt.date + "</strong></td></tr>";
-
-                        col.insertBefore(game, col.childNodes[0]);
-                        col.insertBefore(title, col.childNodes[0]);
-                    }
-
-                    // var homeRow = document.createElement('tr');
-                    var homeStr = "<tr>";
-                    if (isHomeAtBat) {
-                        homeStr += '<td><i class="fas fa-angle-right"></i></td>';
-                        homeStr += '<td>' + evt.homeTeam + '</td>';
-                        homeStr += '<td>' + evt.innin + '</td>';
-                        homeStr += '<td>' + evt.homeScore + '</td>';
-                        homeStr += '<td>' + evt.balls + '</td>';
-                        homeStr += '<td>' + evt.strikes + '</td>';
-                        homeStr += '<td>' + evt.outs + '</td>';
-                        homeStr += '<td></td>';    //pitcher
-                        homeStr += '<td>' + evt.batter + '</td>';
-                        homeStr += '<td>' + evt.eventText + '</td>';
-                    } else {
-                        homeStr += '<td></td><td>' + evt.homeTeam + '</td><td></td><td>' + evt.homeScore + '</td><td></td><td></td><td></td><td>' + evt.pitcher + '</td><td></td><td></td>';
-                    }
-                    homeStr += "</tr>";
-
-                    // var visitorRow = document.createElement('tr');
-                    var visitorStr = "<tr>";
-                    if (!isHomeAtBat) {
-                        visitorStr += '<td><i class="fas fa-angle-right"></i></td>';
-                        visitorStr += '<td>' + evt.visitingTeam + '</td>';
-                        visitorStr += '<td>' + evt.innin + '</td>';
-                        visitorStr += '<td>' + evt.visitorScore + '</td>';
-                        visitorStr += '<td>' + evt.balls + '</td>';
-                        visitorStr += '<td>' + evt.strikes + '</td>';
-                        visitorStr += '<td>' + evt.outs + '</td>';
-                        visitorStr += '<td></td>'; //pitcher
-                        visitorStr += '<td>' + evt.batter + '</td>';
-                        visitorStr += '<td>' + evt.eventText + '</td>';
-                    } else {
-                        visitorStr += '<td></td><td>' + evt.visitingTeam + '</td><td></td><td>' + evt.visitorScore + '</td><td></td><td></td><td></td><td>' + evt.pitcher + '</td><td></td><td></td>';
-                    }
-                    visitorStr += "</tr>";
-                    gameBody.innerHTML += homeStr;
-                    gameBody.innerHTML += visitorStr;
-
-                    if (evt.isEndOfGame == 'T') {
-                        gameBody.innerHTML += "<tr><td colspan='4'><strong>FINAL</strong></td></tr>";
-                    }
-                };
-
-                connection.on('broadcast', addNotification);
-                connection.on('echo', addNotification);
-                connection.on('sendEvent', updateGameBoxScore);
-                connection.on('finalScore', updateFinalScore);
-
-                connection.onclose(onConnectionError);
+              col.insertBefore(game, col.childNodes[0]);
+              col.insertBefore(title, col.childNodes[0]);
             }
 
-
-            function onConnected(connection) {
-                console.log('connection started');
-                document.getElementById('followBtn').addEventListener('click', function (event) {
-                    var sel = document.getElementById('teamList');
-                    if (sel.value) {
-                        connection.send('followTeam', sel.value);
-                        event.preventDefault();
-
-                        var cols = document.getElementById('teamColumns');
-                        var col = document.getElementById('col-' + sel.value);
-                        if (col) {
-                            //do nothing
-                        } else {
-                            //create column
-                            col = document.createElement('div');
-                            col.classList.add('column');
-                            col.setAttribute('id', 'col-' + sel.value);
-
-                            var h2 = document.createElement('h2');
-                            h2.classList.add('subtitle');
-                            h2.innerText = sel.value;
-                            col.appendChild(h2);
-
-                            cols.appendChild(col);
-
-                        }
-                    }
-                })
+            // var homeRow = document.createElement('tr');
+            var homeStr = "<tr>";
+            if (isHomeAtBat) {
+              homeStr += '<td><i class="fas fa-angle-right"></i></td>';
+              homeStr += "<td>" + evt.homeTeam + "</td>";
+              homeStr += "<td>" + evt.innin + "</td>";
+              homeStr += "<td>" + evt.homeScore + "</td>";
+              homeStr += "<td>" + evt.balls + "</td>";
+              homeStr += "<td>" + evt.strikes + "</td>";
+              homeStr += "<td>" + evt.outs + "</td>";
+              homeStr += "<td></td>"; //pitcher
+              homeStr += "<td>" + evt.batter + "</td>";
+              homeStr += "<td>" + evt.eventText + "</td>";
+            } else {
+              homeStr +=
+                "<td></td><td>" +
+                evt.homeTeam +
+                "</td><td></td><td>" +
+                evt.homeScore +
+                "</td><td></td><td></td><td></td><td>" +
+                evt.pitcher +
+                "</td><td></td><td></td>";
             }
+            homeStr += "</tr>";
 
+            // var visitorRow = document.createElement('tr');
+            var visitorStr = "<tr>";
+            if (!isHomeAtBat) {
+              visitorStr += '<td><i class="fas fa-angle-right"></i></td>';
+              visitorStr += "<td>" + evt.visitingTeam + "</td>";
+              visitorStr += "<td>" + evt.innin + "</td>";
+              visitorStr += "<td>" + evt.visitorScore + "</td>";
+              visitorStr += "<td>" + evt.balls + "</td>";
+              visitorStr += "<td>" + evt.strikes + "</td>";
+              visitorStr += "<td>" + evt.outs + "</td>";
+              visitorStr += "<td></td>"; //pitcher
+              visitorStr += "<td>" + evt.batter + "</td>";
+              visitorStr += "<td>" + evt.eventText + "</td>";
+            } else {
+              visitorStr +=
+                "<td></td><td>" +
+                evt.visitingTeam +
+                "</td><td></td><td>" +
+                evt.visitorScore +
+                "</td><td></td><td></td><td></td><td>" +
+                evt.pitcher +
+                "</td><td></td><td></td>";
+            }
+            visitorStr += "</tr>";
+            gameBody.innerHTML += homeStr;
+            gameBody.innerHTML += visitorStr;
 
-            function onConnectionError(error) {
-                if (error && error.message) {
-                    console.error(error.message);
+            if (evt.isEndOfGame == "T") {
+              gameBody.innerHTML +=
+                "<tr><td colspan='4'><strong>FINAL</strong></td></tr>";
+            }
+          };
+
+          connection.on("broadcast", addNotification);
+          connection.on("echo", addNotification);
+          connection.on("sendEvent", updateGameBoxScore);
+          connection.on("finalScore", updateFinalScore);
+
+          connection.onclose(onConnectionError);
+        }
+
+        function onConnected(connection) {
+          console.log("connection started");
+          document
+            .getElementById("followBtn")
+            .addEventListener("click", function(event) {
+              var sel = document.getElementById("teamList");
+              if (sel.value) {
+                connection.send("followTeam", sel.value);
+                event.preventDefault();
+
+                var cols = document.getElementById("teamColumns");
+                var col = document.getElementById("col-" + sel.value);
+                if (col) {
+                  //do nothing
+                } else {
+                  //create column
+                  col = document.createElement("div");
+                  col.classList.add("column");
+                  col.setAttribute("id", "col-" + sel.value);
+
+                  var h2 = document.createElement("h2");
+                  h2.classList.add("subtitle");
+                  h2.innerText = sel.value;
+                  col.appendChild(h2);
+
+                  cols.appendChild(col);
                 }
-            }
+              }
+            });
+        }
 
+        function onConnectionError(error) {
+          if (error && error.message) {
+            console.error(error.message);
+          }
+        }
 
-            bindConnectionMessage(connection);
-            connection.start()
-                .then(function () {
-                    onConnected(connection);
-                })
-                .catch(function (error) {
-                    console.error(error.message);
-                });
-        });
+        bindConnectionMessage(connection);
+        connection
+          .start()
+          .then(function() {
+            onConnected(connection);
+          })
+          .catch(function(error) {
+            console.error(error.message);
+          });
+      });
     </script>
-
-
-</body>
-
+  </body>
 </html>
